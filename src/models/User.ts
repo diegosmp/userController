@@ -8,6 +8,15 @@ const User = sequelize.define('User', {
       primaryKey: true,
    },
 
+   firstname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+   },
+
+   lastname: {
+      type: DataTypes.STRING,
+   },
+
    email: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -23,6 +32,10 @@ const User = sequelize.define('User', {
    password: {
       type: DataTypes.STRING,
       allowNull: false,
+   },
+
+   img_profile: {
+      type: DataTypes.STRING,
    },
 
    is_verify: {
