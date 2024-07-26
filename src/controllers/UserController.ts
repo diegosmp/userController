@@ -2,14 +2,13 @@ import bcrypt from 'bcrypt'
 import { Request, Response } from 'express'
 import User from '../models/User'
 import { Op } from 'sequelize'
-import path from 'path'
 import { validatorEmail } from '../helpers/validateEmail'
-
-const userImgNoProfile = path.join(__dirname, '../public/img/userImgNoProfile.png')
+import createUserToken from '../helpers/createUserToken'
 
 export default class UserController {
    static async signupUser(req: Request, res: Response) {
       const { firstname, lastname, email, username, password, confirmPassword, img_profile } = req.body
+      console.log(firstname)
 
       if (!firstname) {
          return res.status(422).json({ message: 'Firstname is requerid!' })
@@ -61,10 +60,10 @@ export default class UserController {
             email,
             username,
             password: paswordHash,
-            img_profile: img_profile || userImgNoProfile,
          })
 
-         return res.status(201).json({ message: 'New user created whith successfully', newUser })
+         // return res.status(201).json({ message: 'New user created whith successfully', newUser })
+         return createUserToken(newUser, req, res)
       } catch (error) {
          console.error(error)
          return res.status(500).json({ message: 'Error connect server!' })
