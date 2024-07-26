@@ -7,7 +7,7 @@ import createUserToken from '../helpers/createUserToken'
 
 export default class UserController {
    static async signupUser(req: Request, res: Response) {
-      const { firstname, lastname, email, username, password, confirmPassword, img_profile } = req.body
+      const { firstname, lastname, email, username, password, confirmPassword, imgProfile } = req.body
       console.log(firstname)
 
       if (!firstname) {
@@ -62,11 +62,28 @@ export default class UserController {
             password: paswordHash,
          })
 
-         // return res.status(201).json({ message: 'New user created whith successfully', newUser })
          return createUserToken(newUser, req, res)
       } catch (error) {
          console.error(error)
          return res.status(500).json({ message: 'Error connect server!' })
+      }
+   }
+
+   static async signinUser(req: Request, res: Response) {
+      const { email, password } = req.body
+
+      if (!email) {
+         return res.status(422).json({ message: 'E-mail is required!' })
+      }
+
+      if (!password) {
+         return res.status(422).json({ message: 'Password is required!' })
+      }
+
+      const user = await User.findOne({ where: { email } })
+
+      if (!user) {
+         return res.status(404).json({ message: 'E-mail or password wrong!' })
       }
    }
 }
