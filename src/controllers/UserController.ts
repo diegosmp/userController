@@ -80,10 +80,23 @@ export default class UserController {
          return res.status(422).json({ message: 'Password is required!' })
       }
 
-      const user = await User.findOne({ where: { email } })
+      const user: any = await User.findOne({ where: { email } })
 
       if (!user) {
          return res.status(404).json({ message: 'E-mail or password wrong!' })
+      }
+
+      const checkPasswordUser = await bcrypt.compare(password, user.password)
+
+      if (!checkPasswordUser) {
+         return res.status(404).json({ message: 'E-mail or password wrong!' })
+      }
+
+      try {
+         return res.status(200).json({ message: 'Logged in successfully!' })
+      } catch (error) {
+         console.error(error)
+         return res.status(500).json({ message: 'Error connect server!' })
       }
    }
 }
