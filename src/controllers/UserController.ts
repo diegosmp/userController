@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import { Request, Response } from 'express'
-import User from '../models/User'
+import { User } from '../models/User'
 import { Model, Op } from 'sequelize'
 import { validatorEmail } from '../helpers/validateEmail'
 import createUserToken from '../helpers/createUserToken'
