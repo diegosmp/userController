@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { Post } from '../models/Post'
+import { User } from '../models/User'
 
 export default class PostController {
    static async createPost(req: Request, res: Response) {
@@ -23,6 +24,7 @@ export default class PostController {
             post,
             img_post,
             description,
+            userId: req.user.id,
          })
 
          return res.status(201).json({ message: 'Post created successfully!', newPost })

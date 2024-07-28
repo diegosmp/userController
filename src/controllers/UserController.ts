@@ -4,6 +4,7 @@ import { User } from '../models/User'
 import { Model, Op } from 'sequelize'
 import { validatorEmail } from '../helpers/validateEmail'
 import createUserToken from '../helpers/createUserToken'
+import { Post } from '../models/Post'
 
 export default class UserController {
    static async signupUser(req: Request, res: Response) {
@@ -107,5 +108,24 @@ export default class UserController {
          console.error(error)
          return res.status(500).json({ message: 'Error connect server!' })
       }
+   }
+
+   static async showPostsUser(req: Request, res: Response) {
+      const { userId } = req.params
+
+      const userPost = await User.findOne({
+         where: { id: userId },
+         include: [
+            {
+               model: Post,
+               as: 'posts',
+            },
+         ],
+         attributes: {
+            exclude: ['password'],
+         },
+      })
+
+      return res.status(200).json({ userPost })
    }
 }

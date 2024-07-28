@@ -4,6 +4,6 @@ import PostController from '../controllers/PostController'
 
 const router = express.Router()
 
-router.post('/create', PostController.createPost)
+router.post('/create', authUser, PostController.createPost)
 
 export default router

@@ -28,11 +28,15 @@ export const Post = sequelize.define('Post', {
       allowNull: false,
    },
 
-   id_user: {
+   userId: {
       type: DataTypes.UUID,
       allowNull: false,
+      references: {
+         model: User,
+         key: 'id',
+      },
    },
 })
 
-User.hasMany(Post)
-Post.belongsTo(User)
+User.hasMany(Post, { as: 'posts', foreignKey: 'userId' })
+Post.belongsTo(User, { as: 'user', foreignKey: 'userId' })
