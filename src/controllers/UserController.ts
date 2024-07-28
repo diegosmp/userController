@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import { Request, Response } from 'express'
 import User from '../models/User'
-import { Op } from 'sequelize'
+import { Model, Op } from 'sequelize'
 import { validatorEmail } from '../helpers/validateEmail'
 import createUserToken from '../helpers/createUserToken'
 
@@ -80,7 +80,7 @@ export default class UserController {
          return res.status(422).json({ message: 'Password is required!' })
       }
 
-      const user: any = await User.findOne({ where: { email } })
+      const user: Model | any = await User.findOne({ where: { email } })
 
       if (!user) {
          return res.status(404).json({ message: 'E-mail or password wrong!' })
@@ -93,7 +93,16 @@ export default class UserController {
       }
 
       try {
-         return res.status(200).json({ message: 'Logged in successfully!' })
+         createUserToken(user, req, res)
+      } catch (error) {
+         console.error(error)
+         return res.status(500).json({ message: 'Error connect server!' })
+      }
+   }
+
+   static async checkedUserToken(req: Request, res: Response) {
+      try {
+         return res.status(200).json(req.user)
       } catch (error) {
          console.error(error)
          return res.status(500).json({ message: 'Error connect server!' })

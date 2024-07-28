@@ -1,16 +1,21 @@
 import { Request, Response } from 'express'
-import jsw from 'jsonwebtoken'
+import jwt, { Secret } from 'jsonwebtoken'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const JWT_SECRET: Secret | any = process.env.JWT_SECRET
 
 const createUserToken = (user: any, req: Request, res: Response) => {
-   const token = jsw.sign(
+   const token = jwt.sign(
       {
-         userId: user.id,
-         emailUser: user.emailUser,
+         id: user.id,
       },
-      'mySecretToken',
+      JWT_SECRET,
+      { expiresIn: '4h' },
    )
 
-   return res.status(200).json({ message: 'User create sucessfully!', userId: user.id, token })
+   return res.status(200).json({ user: user.id, token })
 }
 
 export default createUserToken
