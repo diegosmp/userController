@@ -8,5 +8,6 @@ router.post('/signup', UserController.signupUser)
 router.post('/signin', UserController.signinUser)
 router.get('/checkeduser', authUser, UserController.checkedUserToken)
 router.get('/profile/:userId/posts', authUser, UserController.showPostsUser)
+router.patch('/profile/:userId/edit', authUser, UserController.editUser)
 
 export default router

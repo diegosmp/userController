@@ -128,4 +128,47 @@ export default class UserController {
 
       return res.status(200).json({ userPost })
    }
+
+   static async editUser(req: Request, res: Response) {
+      const { firstname, lastname, username, img_profile } = req.body
+      const { userId } = req.params
+
+      if (!firstname) {
+         return res.status(422).json({ message: 'Firstname is requerid!' })
+      }
+
+      if (!lastname) {
+         return res.status(422).json({ message: 'Lastname is requerid!' })
+      }
+
+      if (!username) {
+         return res.status(422).json({ message: 'User is required!' })
+      }
+
+      const user: any = await User.findByPk(userId)
+
+      if (!user) {
+         return res.status(422).json({ message: 'User not exist!' })
+      }
+
+      if (userId !== req.user.id) {
+         return res.status(422).json({ message: 'User unauthorized!' })
+      }
+
+      try {
+         await User.update(
+            {
+               firstname,
+               lastname,
+               username,
+               img_profile,
+            },
+            { where: { id: userId } },
+         )
+
+         return res.status(200).json({ message: 'Updated user successfully!' })
+      } catch (error) {
+         return res.status(500).json({ message: 'Error connect server!' })
+      }
+   }
 }
